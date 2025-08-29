@@ -1,0 +1,55 @@
+{
+  "origenes": [
+    "Rosario",
+    "Mendoza",
+    "Neuquén",
+    "Tucumán",
+    "Venezuela",
+    "Chile",
+    "Brasil",
+    "Madrid",
+    "Ushuaia",
+    "Uruguay",
+    "Colombia"
+  ],
+  "preciosOrigen": {
+    "Rosario": 25000,
+    "Mendoza": 40000,
+    "Neuquén": 35000,
+    "Tucumán": 30000,
+    "Venezuela": 450000,
+    "Chile": 200000,
+    "Brasil": 150000,
+    "Madrid": 800000,
+    "Ushuaia": 90000,
+    "Uruguay": 170000,
+    "Colombia": 350000
+  },
+  "destinos": [
+    "Buenos Aires",
+    "Córdoba",
+    "Bariloche",
+    "Salta",
+    "Venezuela",
+    "Chile",
+    "Brasil",
+    "Madrid",
+    "Ushuaia",
+    "Uruguay",
+    "Colombia"
+  ],
+  "preciosBase": {
+    "Buenos Aires": 50000,
+    "Córdoba": 60000,
+    "Bariloche": 90000,
+    "Salta": 75000,
+    "Venezuela": 450000,
+    "Chile": 200000,
+    "Brasil": 150000,
+    "Madrid": 800000,
+    "Ushuaia": 90000,
+    "Uruguay": 170000,
+    "Colombia": 350000
+  },
+  "precioHotelPorDia": 15000
+}
