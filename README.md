@@ -69,4 +69,6 @@ Estados disabled en botones según contexto.
  Código modular y legible
 
 
+Si querés, también te dejo una imagen de “social preview” para que el repo se vea lindo al compartir (1200×630) y la metemos más tarde. ¡Felicitaciones por el proyecto! 🚀💙
+
  
