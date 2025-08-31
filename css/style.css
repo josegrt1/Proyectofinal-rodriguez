@@ -1,0 +1,690 @@
+/* =========================================================
+   RESET + VARIABLES
+========================================================= */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root{
+  --bg: #f7f8fa;
+  --text: #1f2430;
+  --muted: #6b7280;
+  --primary: #2563eb;           /* para CTA azules (intro) */
+  --primary-strong: #1e40af;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --ring: #93c5fd;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg: #0b1220;
+    --text: #e5e7eb;
+    --card: #0f172a;
+    --border: #1f2937;
+    --primary: #3b82f6;
+    --primary-strong: #1d4ed8;
+    --ring: #1d4ed8;
+  }
+}
+
+/* =========================================================
+   BASE
+========================================================= */
+html, body{
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  scroll-behavior: smooth;
+}
+img{ max-width:100%; display:block; }
+
+.container{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 20px;
+}
+
+.hidden{ display: none !important; }
+
+/* Spinner utilitario */
+.loader{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.6rem .9rem; border-radius:.6rem;
+  background:rgba(0,0,0,.06); font-weight:600;
+}
+.loader::before{
+  content:""; width:16px; height:16px; border-radius:50%;
+  border:3px solid currentColor; border-right-color:transparent;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Estados de validación */
+.is-invalid{ outline:3px solid #fca5a5; background:#fff7f7; }
+
+/* =========================================================
+   NAVBAR + CARRITO
+========================================================= */
+/* antes: justify-content: space-between; */
+.navbar{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;   /* <- clave */
+  background:#001f3f;
+  color:#fff;
+  padding:15px 30px;
+  width:100%;
+  gap: 14px;                    /* separa logo del resto */
+  position: sticky; top: 0; z-index: 1000; /* sticky + por encima */
+}
+
+.logo-container{ display:flex; align-items:center; gap:10px; }
+.logo{ width:40px; height:auto; }
+
+.nav-links{
+  list-style:none;
+  display:flex;
+  align-items:center;
+  gap:25px;
+  margin-left:auto;             /* <- empuja el UL a la derecha */
+  margin-right:8px;             /* deja un respiro antes del carrito */
+  padding:0;
+}
+.nav-links a{
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+  transition:color .2s ease;
+}
+.nav-links a:hover{ color:#1abc9c; }
+
+.cart-btn{
+  position:relative; display:inline-flex; align-items:center; gap:.4rem;
+  padding:.55rem .8rem; border-radius:999px;
+  border:1px solid var(--border); background:#fff; color:#1f2430; cursor:pointer;
+  transition: transform .15s ease, box-shadow .2s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+.cart-btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 26px rgba(0,0,0,.08); }
+#cartBadge{
+  min-width:1.4rem; height:1.4rem; padding:0 .3rem; border-radius:999px;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:.8rem; font-weight:800; background:#0a7a2a; color:#fff;
+}
+
+/* ========= NAVBAR: HAMBURGUESA RESPONSIVE ========= */
+.nav-menu{ display:flex; align-items:center; gap:14px; margin-left:auto; }
+
+/* Botón hamburguesa (oculto en desktop) */
+.nav-toggler{
+  display:none;
+  margin-left:auto;
+  width:42px; height:38px;
+  border:0; border-radius:10px;
+  background:#0b2545; cursor:pointer;
+  align-items:center; justify-content:center;
+}
+.nav-toggler .bar{
+  display:block; width:22px; height:2px; background:#fff; margin:3px 0;
+}
+
+/* —— Mobile —— */
+@media (max-width: 900px){
+  .nav-toggler{ display:inline-flex; }
+
+  /* Menú como panel bajo el header */
+  .nav-menu{
+    position: fixed; inset: 60px 0 0 0;
+    background:#001f3f; color:#fff;
+    padding:16px; display:block;
+  }
+  .nav-menu[hidden]{ display:none !important; }
+
+  .nav-links{
+    flex-direction:column; align-items:flex-start;
+    gap:14px; margin:0 0 14px 0;
+  }
+  .nav-links a{ font-size:1.05rem; width:100%; }
+
+  .cart-btn{ width:100%; justify-content:center; }
+
+  /* Evitar scroll de fondo con menú abierto */
+  body.nav-open{ overflow:hidden; }
+}
+
+/* —— Desktop —— */
+@media (min-width: 901px){
+  .nav-menu{ margin-left:auto; }
+}
+
+/* =========================================================
+   HERO (imagen + cuadro)
+========================================================= */
+.hero{
+  background-image:url('../img/hero.jpg');
+  background-size:cover; background-position:center;
+  min-height:520px; display:flex; align-items:center; justify-content:center;
+  padding-top: max(0px, env(safe-area-inset-top)); /* notch-friendly */
+}
+.overlay{
+  background:rgba(0,0,0,.5); width:100%; height:100%;
+  display:flex; align-items:center; justify-content:center;
+}
+.hero-content{ width:100%; max-width:980px; padding:20px 16px; }
+
+/* Cuadro del simulador */
+.search-card{
+  width: clamp(320px, 52vw, 400px);
+  margin: 0 auto 1rem;
+  background: rgba(255,255,255,.95);
+  border-radius:12px; padding:20px; color:#2c3e50;
+  box-shadow:0 8px 20px rgba(0,0,0,.2);
+}
+
+/* Mensajes dentro del cuadro (incluye #mensajes) */
+.search-card { position: relative; }
+.search-card .msg-inline,
+.search-card #mensajes.msg-inline{
+  width:100% !important;
+  margin:.35rem 0 1rem !important;
+  padding:.6rem .9rem;
+  border-radius:10px;
+  background:#e0f2fe; color:#0b274a; font-weight:700;
+  box-shadow:0 3px 10px rgba(0,0,0,.05);
+}
+.search-card .msg-inline.ok,
+.search-card #mensajes.msg-inline.ok{ background:#dcfce7; color:#14532d; }
+.search-card .msg-inline.info,
+.search-card #mensajes.msg-inline.info{ background:#e0f2fe; color:#075985; }
+.search-card .msg-inline.error,
+.search-card #mensajes.msg-inline.error{ background:#fee2e2; color:#991b1b; }
+.search-card .msg-inline:empty,
+.search-card #mensajes.msg-inline:empty{ display:none; }
+
+/* Inputs */
+form{ display:flex; flex-direction:column; gap:15px; }
+input, select{
+  padding:10px; font-size:16px; border-radius:8px; border:1px solid #ccc;
+  transition: border-color .15s ease, background .15s ease;
+}
+.chk{ display:flex; align-items:center; gap:8px; }
+
+/* =========================================================
+   BOTONES (simulador y CTA de intro)
+========================================================= */
+
+/* Botones del simulador (SOLO dentro del form) -> VERDES con gradiente */
+#formularioViaje button:not(.btn-ghost){
+  --btn-rgb: 35, 178, 106;
+  display:inline-flex; align-items:center; gap:.45rem;
+  padding:.7rem 1rem; border-radius:12px;
+  background: linear-gradient(135deg, #32d37a, #18a558);
+  color:#fff; font-weight:800; letter-spacing:.01em; border:1px solid rgba(0,0,0,.04);
+  box-shadow: 0 10px 24px rgba(var(--btn-rgb), .28), inset 0 -2px 0 rgba(255,255,255,.2);
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+  will-change: transform, box-shadow, filter;
+}
+#formularioViaje button:not(.btn-ghost):hover{
+  transform: translateY(-2px); filter: saturate(108%);
+}
+#formularioViaje button:not(.btn-ghost):active{
+  transform: translateY(0); box-shadow: 0 8px 18px rgba(var(--btn-rgb), .24);
+}
+button:disabled{ opacity:.6; cursor:not-allowed; }
+
+/* CTA azules (intro) con gradiente */
+.btn-cta{
+  --btn-rgb: 22, 99, 255;
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.78rem 1.05rem; border-radius:14px;
+  background: linear-gradient(135deg, #2f6bff, #1663ff);
+  color:#fff; text-decoration:none; font-weight:800; letter-spacing:.01em;
+  box-shadow: 0 10px 26px rgba(var(--btn-rgb), .28), inset 0 -2px 0 rgba(255,255,255,.18);
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+  will-change: transform, box-shadow, filter;
+}
+.btn-cta:hover{ transform: translateY(-2px); filter: brightness(1.03); }
+.btn-cta:active{ transform: translateY(0); box-shadow: 0 8px 18px rgba(var(--btn-rgb), .24); }
+.btn-cta:focus-visible{ outline:3px solid var(--ring); outline-offset:2px; }
+
+.btn-ghost{
+  padding:.78rem 1.05rem; border-radius:14px;
+  background:#f1f5f9; border:1px solid #dbe2ea; cursor:pointer; font-weight:700;
+  transition: background .2s ease, transform .15s ease;
+}
+.btn-ghost:hover{ background:#e8eef6; transform: translateY(-1px); }
+
+/* =========================================================
+   DRAWER (carrito)
+========================================================= */
+.drawer-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.35);
+  opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:3990;
+}
+.drawer-overlay.visible{ opacity:1; pointer-events:auto; }
+
+.drawer{
+  position:fixed; top:0; right:0; height:100dvh;
+  width:380px; max-width:92vw; background:#fff;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);
+  transform:translateX(100%); transition:transform .28s ease; z-index:4000;
+  display:grid; grid-template-rows:auto 1fr auto;
+}
+.drawer.open{ transform:translateX(0); }
+.drawer-head{ display:flex; align-items:center; justify-content:space-between; padding:.9rem 1rem; border-bottom:1px solid var(--border); }
+.drawer-body{ padding:1rem; overflow:auto; }
+.drawer-foot{ padding:.9rem 1rem; border-top:1px solid var(--border); }
+.icon-btn{ border:0; background:transparent; font-size:1.2rem; cursor:pointer; }
+.drawer-actions{ margin-top:.6rem; display:flex; gap:.5rem; justify-content:flex-end; flex-wrap:wrap; }
+
+#carritoList{ list-style:none; margin:0; padding:0; }
+#carritoList li{
+  display:flex; justify-content:space-between; align-items:center; gap:.75rem;
+  padding:.6rem .75rem; border:1px solid var(--border);
+  border-radius:12px; background:#fff; margin-bottom:.5rem;
+}
+#carritoTotal{ font-weight:700; margin-top:.25rem; }
+
+/* =========================================================
+   TYPEWRITER (banner de prompts)
+========================================================= */
+.typewriter-wrap{ display:flex; justify-content:center; margin:0 0 1rem; }
+.typewriter-pill{
+  display:flex; align-items:center; gap:.6rem;
+  max-width:920px; width:100%;
+  background:#fff; border:1px solid var(--border);
+  border-radius:16px; padding:.85rem 1rem;
+  box-shadow:0 8px 24px rgba(0,0,0,.06); font-size:1.05rem; font-weight:600;
+}
+#typeText{
+  display:inline-block; white-space:nowrap; overflow:hidden;
+  border-right:2px solid #4aa; min-height:1.3em;
+  animation: caretBlink 1s step-end infinite;
+}
+@keyframes caretBlink { 50% { border-color: transparent; } }
+.tw-btn{ margin-left:auto; border:0; background:#eef7f7; color:#0a7a8a; padding:.45rem .6rem; border-radius:10px; cursor:pointer; }
+
+/* =========================================================
+   INTRO: izquierda (titular) + derecha (tarjeta)
+========================================================= */
+.intro-section{ margin:2rem auto 3rem; padding-block: clamp(12px, 2.5vw, 28px); }
+
+.intro-grid{
+  display:flex; align-items:flex-start; justify-content:space-between;
+  gap: clamp(2.5rem, 7vw, 8rem);                /* separación entre bloques */
+}
+
+/* IZQUIERDA */
+.left-hero-text{
+  flex: 1 1 520px;
+  max-width: 600px;                             /* controla ancho del texto */
+}
+.left-hero-text h2{
+  font-weight:800; letter-spacing:-0.02em; line-height:1.06;
+  font-size: clamp(2.2rem, 5.5vw, 3.6rem);      /* grande sin invadir */
+  margin:0 0 1rem 0; color:#0f172a;
+}
+.left-hero-sub{
+  margin:.35rem 0 0; font-size:.95rem; color:#6b7280; text-transform:lowercase;
+  max-width:36ch;
+}
+
+/* DERECHA: tarjeta compacta */
+.intro-card{
+  flex: 0 0 clamp(560px, 46vw, 700px);          /* ancho parejo de columna */
+  display:grid; grid-template-columns: 0.95fr 1fr; gap:1.15rem;
+  background:#fff; border:1px solid var(--border);
+  border-radius:18px; padding:1rem 1.1rem;
+  box-shadow:0 8px 28px rgba(0,0,0,.06);
+}
+.intro-media{ height: clamp(220px, 26vw, 320px); border-radius:14px; overflow:hidden; }
+.intro-media img{ width:100%; height:100%; object-fit:cover; }
+
+.intro-text h2{ margin:.25rem 0 .6rem; font-size:2rem; line-height:1.15; font-weight:800; }
+.intro-text p{ margin:0 0 .75rem 0; color:#333; }
+.intro-bullets{ list-style:none; margin:0 0 1rem; padding:0; }
+.intro-bullets li{ margin:.25rem 0; font-weight:600; }
+.intro-cta{ display:flex; gap:.6rem; flex-wrap:wrap; }
+
+/* =========================================================
+   OTRAS SECCIONES (Nosotros)
+========================================================= */
+.nosotros-box{
+  background:var(--card); padding:25px; border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+.nosotros-box p{ font-size:18px; line-height:1.6; }
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 980px){
+  .container{ padding-inline:16px; }
+  .intro-grid{ flex-direction:column; gap:1.4rem; }
+  .intro-card{ flex-basis:auto; width:100%; grid-template-columns:1fr; }
+  .left-hero-text{ max-width:26ch; }
+  .intro-media{ height: clamp(200px, 50vw, 300px); }
+}
+
+@media (max-width: 640px){
+  .hero{ min-height:460px; }
+  .search-card, .typewriter-pill{ width: calc(100% - 1.5rem); }
+  .search-card{ max-width: 380px; } /* evita desbordes en móviles angostos */
+}
+
+/* =========================================================
+   ICONITOS + EFECTO "SHINE" EN BOTONES
+========================================================= */
+
+/* Iconitos para los botones del simulador */
+#btnCalcular::before,
+#btnReset::before{
+  display:inline-block;
+  margin-right:.45rem;
+  font-size:1.05em;           /* un toque más grande que el texto */
+  line-height:1;
+}
+#btnCalcular::before{ content:"✈️"; }
+#btnReset::before{    content:"🧹"; }
+
+/* Aseguramos que los botones admitan el brillo */
+#formularioViaje button:not(.btn-ghost){
+  position: relative;
+  overflow: hidden;           /* recorta el brillo dentro del botón */
+  isolation: isolate;         /* evita que el brillo tape el contenido */
+}
+
+/* Línea de brillo que cruza al hacer hover */
+#formularioViaje button:not(.btn-ghost)::after{
+  content:"";
+  position:absolute;
+  top:-150%;
+  left:-40%;
+  width:45%;
+  height:300%;
+  transform: skewX(-22deg);
+  background: linear-gradient(
+    120deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.45) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  opacity:0;
+  pointer-events:none;
+  z-index: 0; /* por debajo del contenido (gracias a isolation) */
+}
+#formularioViaje button:not(.btn-ghost):hover::after{
+  animation: shineSweep .8s ease forwards;
+}
+@keyframes shineSweep{
+  0%   { left:-40%; opacity:.85; }
+  100% { left:140%; opacity:0;   }
+}
+/* Un toquecito extra */
+#btnCalcular:hover{ transform: translateY(-3px); }
+.btn-cta::after{
+  content:"↗";
+  display:inline-block;
+  margin-left:.45rem;
+  transition: transform .15s ease;
+}
+.btn-cta:hover::after{ transform: translateX(2px) translateY(-1px); }
+
+/* =========================================================
+   CAR RITO — Tipografía + Botones con vida
+========================================================= */
+
+/* 1) Texto del drawer más legible (menos gris) */
+.drawer{ color:#0f172a; }
+.drawer-head h3,
+.drawer-body h3,
+.drawer-body h4{ color:#0f172a; font-weight:800; letter-spacing:-0.01em; }
+
+/* Items del carrito */
+#carritoList li{
+  background:#fff;
+  border:1px solid var(--border);
+  transition: border-color .2s ease, box-shadow .2s ease, transform .12s ease;
+}
+#carritoList li:hover{
+  border-color:#cbd5e1;
+  box-shadow:0 8px 20px rgba(0,0,0,.06);
+  transform: translateY(-1px);
+}
+
+/* 2) Botón "Buscar vuelos" */
+#btnComprarCarrito{
+  --btn-rgb: 22, 99, 255;
+  position: relative; isolation: isolate; overflow:hidden;
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.78rem 1.05rem;
+  border-radius:14px;
+  background: linear-gradient(135deg, #2f6bff, #1663ff);
+  color:#fff; font-weight:800; letter-spacing:.01em; border:1px solid rgba(255,255,255,.08);
+  box-shadow: 0 10px 26px rgba(var(--btn-rgb), .28), inset 0 -2px 0 rgba(255,255,255,.18);
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+}
+#btnComprarCarrito:hover{
+  transform: translateY(-2px); filter: brightness(1.03);
+}
+#btnComprarCarrito:active{
+  transform: translateY(0); box-shadow:0 8px 18px rgba(var(--btn-rgb), .24);
+}
+#btnComprarCarrito:focus-visible{
+  outline:3px solid var(--ring); outline-offset:2px;
+}
+#btnComprarCarrito::before{ content:"🔎"; display:inline-block; font-size:1.05em; }
+#btnComprarCarrito::after{
+  content:""; position:absolute; top:-150%; left:-40%;
+  width:45%; height:300%; transform: skewX(-22deg);
+  background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 50%, rgba(255,255,255,0) 100%);
+  opacity:0; pointer-events:none; z-index:0;
+}
+#btnComprarCarrito:hover::after{ animation: shineSweep .8s ease forwards; }
+
+/* 3) Botón "Vaciar carrito" */
+#btnVaciarCarrito{
+  --btn-rgb: 215, 38, 61;
+  position: relative; isolation:isolate; overflow:hidden;
+  display:inline-flex; align-items:center; gap:.45rem;
+  padding:.72rem 1rem;
+  border-radius:12px;
+  background: linear-gradient(135deg, #ff5a5a, #d7263d);
+  color:#fff; font-weight:800; letter-spacing:.01em; border:1px solid rgba(0,0,0,.04);
+  box-shadow: 0 10px 24px rgba(var(--btn-rgb), .26), inset 0 -2px 0 rgba(255,255,255,.18);
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+}
+#btnVaciarCarrito:hover{ transform: translateY(-2px); filter:saturate(110%); }
+#btnVaciarCarrito:active{ transform: translateY(0); box-shadow:0 8px 18px rgba(var(--btn-rgb), .22); }
+#btnVaciarCarrito:focus-visible{ outline:3px solid #fecaca; outline-offset:2px; }
+#btnVaciarCarrito::before{ content:"🗑️"; display:inline-block; font-size:1.05em; }
+#btnVaciarCarrito::after{
+  content:""; position:absolute; top:-150%; left:-40%;
+  width:45%; height:300%; transform: skewX(-22deg);
+  background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 50%, rgba(255,255,255,0) 100%);
+  opacity:0; pointer-events:none; z-index:0;
+}
+#btnVaciarCarrito:hover::after{ animation: shineSweep .8s ease forwards; }
+
+/* 4) Botones pequeños por ítem (eliminar) */
+#carritoList button{
+  background:#f8fafc;
+  color:#ef4444;
+  border:1px solid #e2e8f0;
+  border-radius:10px;
+  padding:.38rem .55rem;
+  font-weight:700;
+  transition: background .2s ease, transform .12s ease, border-color .2s ease;
+}
+#carritoList button:hover{
+  background:#fee2e2; border-color:#fecaca; transform: translateY(-1px);
+}
+#carritoList button:active{ transform: translateY(0); }
+
+/* 5) Footer del drawer */
+.drawer-foot{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:.75rem; flex-wrap:wrap;
+}
+.drawer-actions{
+  display:flex; gap:.55rem; flex-wrap:wrap; justify-content:flex-end;
+}
+
+/* =========================================================
+   FOOTER con redes sociales
+========================================================= */
+.site-footer{
+  background:#001f3f;
+  color:#fff;
+  margin-top: 2rem;
+  position: relative;         /* <-- agregar */
+  z-index: 1;                 /* <-- agregar */
+}
+
+.footer-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 1rem;
+  padding: 22px 0;
+  flex-wrap: wrap;
+}
+
+/* Marca y copy */
+.footer-brand{
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.copyright{
+  opacity:.9;
+  font-size: .95rem;
+}
+
+/* Botones sociales */
+.social-links{
+  list-style:none;
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  padding:0; margin:0;
+}
+.social-btn{
+  --size: 40px;
+  width: var(--size); height: var(--size);
+  display:inline-flex; align-items:center; justify-content:center;
+  color:#fff; background: rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  transition: transform .15s ease, background .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+  box-shadow: 0 6px 16px rgba(0,0,0,.12);
+  position: relative; overflow: hidden; isolation:isolate;
+}
+.social-btn i{ font-size: 1.05rem; }
+.social-btn:hover{
+  transform: translateY(-2px);
+  background: rgba(255,255,255,.16);
+  border-color: rgba(255,255,255,.28);
+  box-shadow: 0 10px 22px rgba(0,0,0,.16);
+}
+
+/* Shine sutil al pasar el mouse */
+.social-btn::after{
+  content:"";
+  position:absolute;
+  top:-160%; left:-40%;
+  width:45%; height:320%;
+  transform: skewX(-22deg);
+  background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 50%, rgba(255,255,255,0) 100%);
+  opacity:0; pointer-events:none; z-index:0;
+}
+.social-btn:hover::after{ animation: footerShine .8s ease forwards; }
+@keyframes footerShine{
+  0%   { left:-40%; opacity:.85; }
+  100% { left:140%; opacity:0;   }
+}
+
+/* Cambios de color por marca al hover (opcional) */
+.social-links a[aria-label*="Facebook"]:hover{ color:#1877F2; }
+.social-links a[aria-label*="Twitter"]:hover,
+.social-links a[aria-label*="X"]:hover{ color:#000; }
+.social-links a[aria-label*="Instagram"]:hover{ color:#E4405F; }
+
+/* Responsive: apilar en pantallas chicas */
+@media (max-width: 760px){
+  .footer-inner{
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: .75rem;
+  }
+}
+
+/* ================== LOGOS ================== */
+.navbar .logo{
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  padding: 3px;                 /* deja un aro */
+  background: #062642;          /* azul oscuro de tu header */
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.15);
+}
+.footer-brandbox{
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+}
+.footer-logo{
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  padding: 3px;
+  background: #062642;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.15);
+}
+.footer-brand{
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+/* =========================================================
+   TICKER ROBUSTO (IZQUIERDA → DERECHA usando tus textos de app.js)
+   
+========================================================= */
+.ticker { display:flex; align-items:center; gap:10px; }
+
+.ticker-viewport{
+  position:relative;
+  overflow:hidden;
+  flex:1 1 auto;
+  min-width:0;
+}
+
+/* Dirección LTR: de izquierda -> derecha */
+.ticker-track{
+  display:inline-flex;              /* original + duplicado en línea */
+  align-items:center;
+  white-space:nowrap;
+  gap: 4rem;                        /* espacio entre original y duplicado */
+  will-change: transform;
+  animation: tickerMoveLTR var(--ticker-duration, 18s) linear infinite;
+  padding-right: 100%;              /* pre-roll hacia la derecha */
+}
+
+.ticker-text, .ticker-dup{
+  display:inline-block;
+  white-space:nowrap;
+}
+.ticker-text { border-right: 0 !important; } /* anula caret del typewriter */
+
+@keyframes tickerMoveLTR{
+  0%   { transform: translateX(var(--ticker-shift, 50%)); }
+  100% { transform: translateX(0); }
+}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce){
+  .ticker-track{ animation: none; transform: none; }
+}

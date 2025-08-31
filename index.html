@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vuelos&Más – Simulador de viajes</title>
+  <meta name="description" content="Simulador de viajes: calcula costos por destino, días, pasajeros y hotel. Guarda historial y muestra tu última simulación.">
+  <link rel="icon" href="img/logo.jpg" type="image/png">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <!-- Tipografía Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Iconos (Font Awesome) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" integrity="sha512-6M2wWqC8t1C+VfVtH8yWv2SgG8p9d5Y0m3p7a0v1lq0q0d1t5G6BquyVnZ8Gk9+Wm0eZrHf0m0YlBqk3xKw2NQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Librerías externas -->
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <!-- NAVBAR SUPERIOR -->
+<nav class="navbar">
+  <div class="logo-container">
+    <img src="img/logo.jpg" alt="Logo" class="logo" />
+    <span>Vuelos&Más</span>
+  </div>
+
+  <!-- Botón hamburguesa (mobile) -->
+  <button class="nav-toggler" id="navToggler" aria-label="Abrir menú" aria-expanded="false" aria-controls="navMenu">
+    <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+  </button>
+
+  <!-- Menú colapsable: tus links + carrito -->
+  <div class="nav-menu" id="navMenu" hidden>
+    <ul class="nav-links">
+      <li><a href="#formulario">Obtener simulación</a></li>
+      <li><a href="#nosotros">Sobre nosotros</a></li>
+    </ul>
+
+    <!-- Botón carrito a la derecha en desktop / abajo en mobile -->
+    <button id="btnCart" class="cart-btn" aria-label="Abrir simulador">
+      🧺 <span id="cartBadge">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Overlay -->
+<div id="drawerOverlay" class="drawer-overlay hidden" aria-hidden="true"></div>
+
+<!-- Drawer del simulador -->
+<aside id="cartDrawer" class="drawer hidden" aria-hidden="true" aria-labelledby="drawerTitle" role="dialog">
+  <div class="drawer-head">
+    <h3 id="drawerTitle">Simulador</h3>
+    <button id="drawerClose" class="icon-btn" aria-label="Cerrar">✕</button>
+  </div>
+
+  <div class="drawer-body">
+    <ul id="carritoList" aria-live="polite" aria-label="Lista de simulaciones"></ul>
+  </div>
+
+  <div class="drawer-foot">
+    <div id="carritoTotal"></div>
+    <div class="drawer-actions">
+      <button id="btnVaciarCarrito" class="secondary">Vaciar</button>
+      <button id="btnComprarCarrito">Buscar vuelos</button>
+    </div>
+  </div>
+</aside>
+
+  <!-- HERO SECTION CON IMAGEN DE FONDO -->
+  <header class="hero" id="formulario">
+    <div class="overlay">
+      <div class="hero-content container">
+        <!-- Loader dentro del hero -->
+        <div id="loader" class="loader hidden" role="status" aria-live="polite">Cargando…</div>
+
+        <!-- Banner tipo "prompt" que se escribe solo -->
+<div class="typewriter-wrap">
+  <div class="typewriter-pill ticker">
+    <div class="ticker-viewport" aria-hidden="false">
+      <div class="ticker-track" id="tickerTrack">
+        <!-- Tu app.js seguirá escribiendo aquí -->
+        <span id="typeText" class="ticker-text" aria-live="polite"></span>
+        <!-- Duplicado para bucle continuo -->
+        <span class="ticker-dup" aria-hidden="true"></span>
+      </div>
+    </div>
+    <button id="typeNext" class="tw-btn" aria-label="Cambiar mensaje">↻</button>
+  </div>
+</div>
+
+
+        <!-- Tarjeta/cuadro de búsqueda -->
+        <div class="search-card card">
+          <h1>✈️ Planificá tu viaje</h1>
+
+          <!-- 👇 Mensajes ahora DENTRO del cuadro, debajo del título -->
+          <div id="mensajes" class="msg-inline" aria-live="polite" aria-atomic="true"></div>
+
+          <form id="formularioViaje" class="formulario-box" novalidate>
+            <label for="origen">Origen:</label>
+            <select id="origen" required></select>
+
+            <label for="destino">Destino:</label>
+            <select id="destino" required></select>
+
+            <label for="pasajeros">Pasajeros:</label>
+            <input type="number" id="pasajeros" min="1" value="1" required />
+
+            <label for="fechaSalida">Fecha de salida:</label>
+            <input type="date" id="fechaSalida" required />
+
+            <label for="fechaRegreso">Fecha de regreso:</label>
+            <input type="date" id="fechaRegreso" required />
+
+            <label class="chk">
+              <input type="checkbox" id="hotel" />
+              Incluir hotel ($15.000 por día)
+            </label>
+
+            <div style="display:flex; gap:.5rem; flex-wrap: wrap;">
+              <button type="submit" id="btnCalcular">Calcular viaje</button>
+              <button type="button" id="btnReset" class="secondary">Limpiar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <main>
+  <!-- Sección de introducción / propuesta de valor -->
+<section class="intro-section container" id="intro">
+  <div class="intro-grid">
+    <!-- IZQUIERDA: titular grande fuera de la tarjeta -->
+    <div class="left-hero-text">
+      <h2>No más perder horas interminables buscando el viaje perfecto.</h2>
+      <p class="left-hero-sub">pregúntame cualquier cosa (sobre viajes, no sobre tu ex)</p>
+    </div>
+
+    <!-- DERECHA: tu tarjeta existente (imagen + texto + CTA) -->
+    <div class="intro-card">
+      <div class="intro-media">
+        <img src="img/public.gif" alt="Viaja fácil con nuestro simulador" loading="lazy">
+      </div>
+      <div class="intro-text">
+        <h2>Tu compañero de viaje definitivo</h2>
+        <p>
+          ¿Querés planificar tu próxima escapada? Nuestro simulador calcula
+          <strong>costos reales</strong> Guardá tus ideas en el
+          carrito y abrí las búsquedas en <strong>Google Flights</strong> con un clic.
+        </p>
+        <ul class="intro-bullets">
+          <li>✈️ Rutas y fechas con validaciones inteligentes</li>
+        </ul>
+        <div class="intro-cta">
+          <a href="#formulario" class="btn-cta">Crear una nueva simulación</a>
+          <button type="button" class="btn-ghost" id="btnAbrirCarritoHome">Ver carrito</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <!-- SOBRE NOSOTROS -->
+    <section id="nosotros" class="nosotros-box">
+      <h2>🌍 Sobre nosotros</h2>
+      <p>
+        En <strong>Vuelos y Más</strong> te ayudamos a planificar tu viaje
+        ideal. Calculá tu presupuesto en segundos con nuestro simulador 100% personalizado.
+      </p>
+    </section>
+  </main>
+
+  <script type="module" src="js/app.js"></script>
+  <footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brandbox">
+    <img src="img/logo.jpg" alt="Vuelos y Más" class="footer-logo" />
+    <span class="footer-brand">Vuelos&Más</span>
+  </div>
+
+<ul class="social-links" aria-label="Redes sociales">
+  <li>
+    <a href="https://facebook.com/" target="_blank" rel="noopener" aria-label="Facebook" class="social-btn">
+      <img src="img/facebook.png" alt="Facebook" width="38" height="38" loading="lazy">
+    </a>
+  </li>
+  <li>
+    <a href="https://twitter.com/" target="_blank" rel="noopener" aria-label="X (Twitter)" class="social-btn">
+      <img src="img/twitter.png" alt="X (Twitter)" width="35" height="35" loading="lazy">
+    </a>
+  </li>
+  <li>
+    <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram" class="social-btn">
+      <img src="img/instagram.jpg" alt="Instagram" width="38" height="38" loading="lazy">
+    </a>
+  </li>
+</ul>
+
+    <p class="copyright">© 2025 Vuelos&Más — Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    const toggler = document.getElementById('navToggler');
+    const menu = document.getElementById('navMenu');
+
+    function closeMenu() {
+      if (!menu) return;
+      menu.setAttribute('hidden', '');
+      document.body.classList.remove('nav-open');
+      toggler?.setAttribute('aria-expanded', 'false');
+    }
+
+    toggler?.addEventListener('click', () => {
+      const isHidden = menu.hasAttribute('hidden');
+      if (isHidden) {
+        menu.removeAttribute('hidden');
+        document.body.classList.add('nav-open');
+        toggler.setAttribute('aria-expanded', 'true');
+      } else {
+        closeMenu();
+      }
+    });
+
+    // Cerrar al tocar un enlace del menú
+    menu?.addEventListener('click', (e) => {
+      const a = e.target.closest('a');
+      if (a) closeMenu();
+    });
+
+    // Cerrar si pasa a desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 900) closeMenu();
+    });
+  })();
+</script>
+
+<script>
+(function(){
+  const track = document.getElementById('tickerTrack');
+  const original = document.getElementById('typeText');
+  const dup = document.querySelector('.ticker-dup');
+
+  if (!track || !original || !dup) return;
+
+  function syncAndSize(){
+    // Copiar el contenido actual al duplicado
+    dup.textContent = original.textContent || original.innerText || '';
+
+    // Esperar a que el layout mida los anchos
+    requestAnimationFrame(() => {
+      const viewport = track.parentElement; // .ticker-viewport
+      const totalWidth = original.offsetWidth + 64 + dup.offsetWidth; // 64px ~ gap (4rem)
+      const viewWidth = viewport.offsetWidth || 1;
+
+      // Duración proporcional (más texto = más duración)
+      const pxPerSecond = 80; // velocidad base (ajústala si quieres)
+      const duration = Math.max(10, Math.round((totalWidth + viewWidth) / pxPerSecond));
+
+      track.style.setProperty('--ticker-duration', duration + 's');
+      // Recorrido: movemos el ancho del original+gap (aprox mitad del track)
+      track.style.setProperty('--ticker-shift', `-${(original.offsetWidth + 64)}px`);
+    });
+  }
+
+  // 1) Sincronizar al cargar
+  syncAndSize();
+
+  // 2) Observar cambios que haga app.js en #typeText
+  const obs = new MutationObserver(syncAndSize);
+  obs.observe(original, { childList: true, characterData: true, subtree: true });
+
+  // 3) Recalcular en resize/orientación
+  window.addEventListener('resize', () => { syncAndSize(); });
+})();
+</script>
+
+</body>
+</html>
