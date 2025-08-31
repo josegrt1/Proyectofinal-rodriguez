@@ -45,20 +45,10 @@ proyecto/
 └─ img/             # imágenes (hero, logos, etc.)
 
 
-🗃️ Datos (JSON) — esquema
-
-data/viajes.json (ejemplo general):
-
+🗃️ Datos (JSON)
 {
-  "preciosOrigen": {
-    "BUE": 150,
-    "BOG": 120
-  },
-  "preciosBase": {
-    "MIA": 650,
-    "MAD": 800,
-    "BOG": 350
-  },
+  "preciosOrigen": { "BUE": 150, "BOG": 120 },
+  "preciosBase":   { "MIA": 650, "MAD": 800, "BOG": 350 },
   "precioHotelPorDia": 45,
   "origenes": ["BUE", "BOG"],
   "destinos": ["MIA", "MAD", "BOG"]
@@ -155,5 +145,9 @@ Guardar. La URL queda como https://<usuario>.github.io/<repo>/.
 
 📜 Licencia
 
-MIT © 2025 José Rodríguez
+2) En el **About** del repo podrías agregar una descripción corta y 2–3 **topics** (“javascript”, “simulator”, “ecommerce”) para que se vea más pro en GitHub. (Lo vi vacío en la barra lateral del repo). :contentReference[oaicite:0]{index=0}
 
+Sobre la **demo**, abre perfecto y el drawer/cart aparece encima con el contador “0”; si algo se ve raro, probá un **Ctrl+F5** o recarga dura para limpiar caché. :contentReference[oaicite:1]{index=1}
+
+¿Quieres que te suba una versión del README con **capturas** ya enlazadas (placeholders `docs/screen-home.png`, `screen-swal.png`, `screen-cart.png`) para que solo subas las imágenes?
+::contentReference[oaicite:2]{index=2}
