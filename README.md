@@ -1,48 +1,36 @@
-ProyectoFinal-Rodriguez — Simulador de Viajes ✈️
+# ProyectoFinal-Rodriguez — Simulador de Viajes ✈️
 
-Demo: https://josegrt1.github.io/Proyectofinal-rodriguez
+**Demo:** https://josegrt1.github.io/Proyectofinal-rodriguez  
+**Repositorio:** https://github.com/josegrt1/Proyectofinal-rodriguez
 
-Repositorio: https://github.com/josegrt1/Proyectofinal-rodriguez
+Simulador interactivo de viajes (tipo ecommerce) que permite cotizar vuelos y hospedaje, agregar simulaciones al carrito, persistirlas y visualizar totales. Implementado con **HTML + CSS + JavaScript (ES Modules)**, usando **Luxon** (fechas) y **SweetAlert2** (modales), y datos remotos simulados con **JSON**.
 
-Simulador interactivo de viajes (tipo ecommerce) que permite cotizar vuelos y hospedaje, agregar simulaciones al carrito, persistirlas y visualizar totales. Implementado con HTML + CSS + JavaScript (ES Modules), usando Luxon (fechas) y SweetAlert2 (modales), y datos remotos simulados con JSON.
+---
 
-🚀 Características
+## 🚀 Características
 
-Formulario de cotización con origen, destino, fechas, pasajeros y hotel.
+- Formulario de cotización con **origen, destino, fechas, pasajeros y hotel**.  
+- **Cálculo de totales** según reglas de negocio (precios por origen/destino + hotel por día + pasajeros).  
+- **Carrito (drawer)** con overlay, listado de simulaciones, eliminación de ítems y totales acumulados.  
+- **Persistencia** con `localStorage`.  
+- **Datos remotos simulados**: `viajes.json` (con *fallback* sin red).  
+- **Fechas** con **Luxon** (validaciones y fecha de regreso).  
+- **Modales** con **SweetAlert2** (sin `alert/prompt/confirm`).  
+- **HTML semántico**, **accesibilidad** básica y **responsive**.
 
-Cálculo de totales según reglas de negocio (precios por origen/destino + hotel por día + pasajeros).
+---
 
-Carrito (drawer) con overlay, listado de simulaciones, eliminación de ítems y totales acumulados.
+## 🧩 Tecnologías
 
-Persistencia con localStorage.
+- HTML5 semántico · CSS3 (responsive)  
+- JavaScript **ES Modules**: `app.js`, `ui.js`, `api.js`, `storage.js`  
+- **Luxon**, **SweetAlert2**, **localStorage**, **JSON**
 
-Datos remotos simulados: viajes.json (con fallback sin red).
+---
 
-Fechas inteligentes con Luxon: validaciones y fecha de regreso.
+## 📂 Estructura
 
-Modales con SweetAlert2 (reemplaza alert/prompt/confirm).
-
-HTML semántico + accesibilidad básica (aria-live, roles).
-
-Responsive (flex/grid, clamp, media queries) y diseño moderno.
-
-🧩 Tecnologías
-
-HTML5 semántico
-
-CSS3 (layout responsive)
-
-JavaScript ES Modules: app.js, ui.js, api.js, storage.js
-
-Luxon (manejo de fechas)
-
-SweetAlert2 (modales)
-
-localStorage (persistencia)
-
-JSON remoto simulado (viajes.json)
-
-📂 Estructura de carpetas
+```text
 proyecto/
 ├─ index.html
 ├─ css/
